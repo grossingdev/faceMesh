@@ -316,6 +316,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		D75077C7227736B600B58C24 /* faceMesh-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "faceMesh-Bridging-Header.h"; sourceTree = "<group>"; };
 		D751B3AC227035FB0007B24F /* ARSceneViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARSceneViewManager.m; sourceTree = "<group>"; };
 		D751B3DD227037AC0007B24F /* Mask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mask.swift; sourceTree = "<group>"; };
 		D751B3E122705E920007B24F /* ARSceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSceneView.swift; sourceTree = "<group>"; };
@@ -430,6 +431,7 @@
 		13B07FAE1A68108700A75B9A /* faceMesh */ = {
 			isa = PBXGroup;
 			children = (
+				D75077C7227736B600B58C24 /* faceMesh-Bridging-Header.h */,
 				D751B3E122705E920007B24F /* ARSceneView.swift */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -998,6 +1000,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = winwin.test.com;
 				PRODUCT_NAME = faceMesh;
+				SWIFT_OBJC_BRIDGING_HEADER = "faceMesh-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1021,6 +1024,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = winwin.test.com;
 				PRODUCT_NAME = faceMesh;
+				SWIFT_OBJC_BRIDGING_HEADER = "faceMesh-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

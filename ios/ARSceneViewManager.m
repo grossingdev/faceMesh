@@ -31,8 +31,12 @@ RCT_EXPORT_VIEW_PROPERTY(debugEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showCamera, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(run, BOOL)
 
-RCT_EXPORT_METHOD(exportIntoFile) {
-  [view exportIntoFile];
+RCT_EXPORT_METHOD(exportIntoFile: (RCTResponseSenderBlock)callback) {
+  [view exportIntoFileWithCallback:(RCTResponseSenderBlock)callback];
 }
 
+
+RCT_EXPORT_METHOD(disableFaceAnchorUpdate: (BOOL)update) {
+  [view disableFaceAnchorUpdateWithValue:(BOOL)update];
+}
 @end

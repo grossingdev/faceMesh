@@ -13,6 +13,7 @@ import SceneKit
 
 @objc public class ARSceneView: ARSCNView, ARSCNViewDelegate, ARSessionDelegate {
   var faceNode: Mask?
+  var flagDisableUpdate: Bool = false
   var cameraSource: Any?
   var utilities = Utilities()
   var config: ARFaceTrackingConfiguration = ARFaceTrackingConfiguration()
@@ -26,17 +27,25 @@ import SceneKit
       }
     }
   }
+  
   @objc
-  public func exportIntoFile() {
+  public func disableFaceAnchorUpdate(value: ObjCBool) {
+    flagDisableUpdate = value.boolValue
+    self.session.run(self.config)
+  }
+  
+  @objc
+  public func exportIntoFile(callback: RCTResponseSenderBlock) {
     guard let a = session.currentFrame?.anchors[0] as? ARFaceAnchor else { return }
     
     let toprint = utilities.exportToSTL(geometry: a.geometry)
-    
-    let file = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent("face.dae")
+    let strFileName = flagDisableUpdate ? "baseFace.stl" : "face.stl"
+    let file = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(strFileName)
     do {
       try toprint.write(to: file!, atomically: true, encoding: String.Encoding.utf8)
+      callback([file?.absoluteString])
     } catch  {
-      
+      callback([""])
     }
   }
   public override init(frame: CGRect) {
@@ -114,7 +123,19 @@ import SceneKit
   
   public func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
     guard let faceAnchor = anchor as? ARFaceAnchor else { return }
-    faceNode?.update(withFaceAnchor: faceAnchor)
+    if (!flagDisableUpdate) {
+      faceNode?.update(withFaceAnchor: faceAnchor)
+    } else {
+      let mask = ARSCNFaceGeometry(device: self.device!)
+      let maskNode = Mask(geometry: mask!)
+      faceNode = maskNode
+      DispatchQueue.main.async {
+        for child in node.childNodes {
+          child.removeFromParentNode()
+        }
+        node.addChildNode(maskNode)
+      }
+    }
   }
   
   // We are overwriting addSubview that React-Native calls

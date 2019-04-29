@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const ARSceneView = requireNativeComponent('ARSceneView', ARSceneView);
 const ARSceneViewManager = NativeModules.ARSceneViewManager;
-export const { exportIntoFile } = ARSceneViewManager;
+export const { exportIntoFile, disableFaceAnchorUpdate } = ARSceneViewManager;
 
 export default class ARScene extends React.Component {
     constructor(props) {

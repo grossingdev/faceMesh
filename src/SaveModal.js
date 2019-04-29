@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Modal, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +78,10 @@ export default class SaveModal extends Component {
   _handleUpload = () => {
     this.props.onUpload(this.state.text);
   };
+  _handleDefault = () => {
+    const str = moment().format('YYYY_MM_DD_hh_mm_ss');
+    this.setState({ text: str });
+  }
   render() {
     return (
       <Modal transparent>
@@ -91,7 +95,7 @@ export default class SaveModal extends Component {
               placeholder="filename here..."
               clearButtonMode="always"
             />
-            <TouchableOpacity style={styles.btnDefault}>
+            <TouchableOpacity style={styles.btnDefault} onPress={this._handleDefault}>
               <Text style={styles.label}>default name</Text>
             </TouchableOpacity>
             <View style={styles.buttonsContainer}>
