@@ -11,11 +11,11 @@ const options = {
 
 let instance = null;
 
-export const uploadFile = (uri, name) => {
+export const uploadFile = (uri, name, type = 'stl') => {
   const file = {
     uri,
     name,
-    type: "stl"
+    type
   };
   instance = RNS3.put(file, options);
   return instance;

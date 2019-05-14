@@ -43,13 +43,20 @@ export default class SaveModal extends Component {
   }
   render() {
     const { type, progress } = this.props;
+    console.log('type', type);
+    let title = 'Check file existing status...';
+    if (type === 'uploadingSTL') {
+      title = `Upload STL file into S3 storage - ${progress} %`;
+    } else if (type === 'uploadingTexture') {
+      title = `Upload Texture file into S3 storage - ${progress} %`;
+    }
     return (
       <Modal transparent>
         <View style={styles.container}>
           <View style={styles.modal}>
             <ActivityIndicator size="large" color="#0000ff" />
             <Text style={styles.title}>
-              {type === 'checking' ? 'Check file existing status...' : `Upload file into S3 storage - ${progress} %`}
+              {title}
             </Text>
             {type !== 'checking' &&
             <TouchableOpacity style={styles.btnDefault} onPress={this.props.onClose}>

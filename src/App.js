@@ -25,8 +25,27 @@ export default class App extends Component {
     abortUpload();
     this.setState({ waitingDialog: '', progress: 0 });
   };
-  uploadFileToS3(path, fileName) {
-    this.setState({ waitingDialog: 'uploading', progress: 0 });
+  async uploadTextureToS3(path, fileName) {
+    this.setState({ waitingDialog: 'uploadingTexture', progress: 0 });
+    return new Promise((resolve, reject) => {
+      uploadFile(path, fileName, 'png')
+        .progress((e) => {
+          const progress = (e.loaded / e.total * 100.0).toFixed(0);
+          this.setState({ progress });
+        })
+        .then(response => {
+          if (response.status !== 201) {
+            alert('Failed uploading');
+            reject();
+          } else {
+            this.setState({ waitingDialog: '' });
+            resolve();
+          }
+        });
+    })
+  }
+  uploadSTLFileToS3(path, fileName) {
+    this.setState({ waitingDialog: 'uploadingSTL', progress: 0 });
     uploadFile(path, `${fileName}.stl`)
       .progress((e) => {
         const progress = (e.loaded / e.total * 100.0).toFixed(0);
@@ -55,12 +74,17 @@ export default class App extends Component {
         }
       });
   }
+  async uploadFiles(stlPath, stlFileName, texturePath, textureFileName) {
+    await this.uploadTextureToS3(texturePath, textureFileName);
+    this.uploadSTLFileToS3(stlPath, stlFileName)
+  }
   _handleUpload = (_fileName) => {
-    exportIntoFile(async (path) => {
+    exportIntoFile(async (path, texturePath) => {
       this._handleClose();
       this.setState({ waitingDialog: 'checking' });
       console.log('callback', path);
       const fileName = `${_fileName}.stl`;
+      const textureFileName = `${_fileName}.png`;
       const flagExist = await checkFile(fileName);
       if (flagExist) {
         Alert.alert(
@@ -72,12 +96,12 @@ export default class App extends Component {
               onPress: () => this.setState({ showModal: true }),
               style: 'cancel',
             },
-            {text: 'Yes', onPress: () => this.uploadFileToS3(path, _fileName)},
+            {text: 'Yes', onPress: () => this.uploadFiles(path, fileName, texturePath, textureFileName)},
           ],
           {cancelable: false},
         );
       } else {
-        this.uploadFileToS3(path, _fileName);
+        return this.uploadFiles(path, _fileName, texturePath, textureFileName);
       }
     });
   };

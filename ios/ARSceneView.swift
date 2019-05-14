@@ -10,7 +10,14 @@ import UIKit
 import ARKit
 import SceneKit
 
-
+extension UIImage {
+  convenience init (pixelBuffer: CVPixelBuffer) {
+    let ciImage = CIImage(cvImageBuffer: pixelBuffer)
+    let context = CIContext(options: nil)
+    let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
+    self.init(cgImage: cgImage!)
+  }
+}
 @objc public class ARSceneView: ARSCNView, ARSCNViewDelegate, ARSessionDelegate {
   var faceNode: Mask?
   var flagDisableUpdate: Bool = false
@@ -37,13 +44,17 @@ import SceneKit
   @objc
   public func exportIntoFile(callback: RCTResponseSenderBlock) {
     guard let a = session.currentFrame?.anchors[0] as? ARFaceAnchor else { return }
-    
+    let snap = session.currentFrame!.capturedImage
     let toprint = utilities.exportToSTL(geometry: a.geometry)
     let strFileName = flagDisableUpdate ? "baseFace.stl" : "face.stl"
+    let textureFileName = "texture.png"
     let file = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(strFileName)
+    let textureFile = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(textureFileName)
+
     do {
       try toprint.write(to: file!, atomically: true, encoding: String.Encoding.utf8)
-      callback([file?.absoluteString])
+      try? UIImage(pixelBuffer: snap).jpegData(compressionQuality: 0.85)?.write(to: textureFile!)
+      callback([file?.absoluteString, textureFile?.absoluteString])
     } catch  {
       callback([""])
     }
